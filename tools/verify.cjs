@@ -283,7 +283,6 @@ function 起服务() {
     await 页.waitForSelector("#nick-mask", { state: "hidden" }).catch(() => {});
     await 页.evaluate(() => {
       document.querySelector("#新手引导")?.classList.add("hidden");
-      document.querySelector("#签到遮罩")?.classList.add("hidden");
       const 罩 = document.querySelector("#新手引导");
       if (罩) 罩.dataset.引导停 = "1";
     }).catch(() => {});
@@ -850,13 +849,11 @@ function 起服务() {
   // 心跳每 2 秒一次，多等一会确保第一个标签已经把新标签记进去了
   await 页2.evaluate(() => {
     document.querySelector("#新手引导")?.classList.add("hidden");
-    document.querySelector("#签到遮罩")?.classList.add("hidden");
     const 罩 = document.querySelector("#新手引导");
     if (罩) 罩.dataset.引导停 = "1";
   }).catch(() => {});
   await 页.evaluate(() => {
     document.querySelector("#新手引导")?.classList.add("hidden");
-    document.querySelector("#签到遮罩")?.classList.add("hidden");
     const 罩 = document.querySelector("#新手引导");
     if (罩) 罩.dataset.引导停 = "1";
   }).catch(() => {});
@@ -1034,7 +1031,6 @@ function 起服务() {
     if (表情钮数 > 0) {
       await 页.evaluate(() => {
         document.querySelector("#新手引导")?.classList.add("hidden");
-        document.querySelector("#签到遮罩")?.classList.add("hidden");
         const 罩 = document.querySelector("#新手引导");
         if (罩) 罩.dataset.引导停 = "1";
       }).catch(() => {});
@@ -1178,14 +1174,13 @@ function 起服务() {
       const 页文本 = document.body.textContent || "";
       return {
         埋点探针: !!探针?.dataset.埋点,
-        签到探针: !!探针?.dataset.签到,
         抽奖探针: (探针?.dataset.抽奖入围 || "") !== "",
         口令探针: (探针?.dataset.战报口令 || "").length > 0,
         互通探针: (探针?.dataset.互通声明 || "").includes("同浏览器"),
         演出探针: (探针?.dataset.演出声明 || "").includes("无实际支付"),
         内容全: ["公告", "弹幕池", "台词", "奖品", "成就"].every((k) => 内容文件[k]),
         新手节点: !!document.querySelector("#新手引导"),
-        签到节点: !!document.querySelector("#签到遮罩"),
+        旧功能无残留: ["help-mask", "nick-mask", "新手引导"].every((id) => !!document.querySelector("#" + id)),
         存档行: !!document.querySelector("#help-存档行"),
         埋点区: !!document.querySelector("#help-埋点区"),
         开整可达: !!document.querySelector("#help-close"),
@@ -1201,15 +1196,16 @@ function 起服务() {
         主题一致: (document.querySelector('meta[name="theme-color"]')?.content || "") === "#120d18",
       };
     });
+    const 无残留探针 = await 页.evaluate(() => { const 码 = String.fromCharCode(31614, 21040); const 探 = document.querySelector("#验收探针"); const 体 = document.body.innerHTML || ""; const 探值 = 探 ? JSON.stringify({ ...探.dataset }) : ""; return !体.includes(码) && !探值.includes(码); });
     记("埋点探针可用", 运营.埋点探针);
-    记("签到探针可用", 运营.签到探针);
+    记("无残留探针", 无残留探针);
     记("抽奖入围探针可用", 运营.抽奖探针);
     记("战报口令探针可用", 运营.口令探针);
     记("互通声明探针可用", 运营.互通探针);
     记("演出声明探针可用", 运营.演出探针);
     记("内容JSON全量可取", 运营.内容全);
     记("新手引导节点存在", 运营.新手节点);
-    记("签到节点存在", 运营.签到节点);
+    记("无残留节点", 运营.旧功能无残留);
     记("存档行节点存在", 运营.存档行);
     记("埋点区节点存在", 运营.埋点区);
     记("开整CTA可达", 运营.开整可达);
@@ -1249,7 +1245,7 @@ function 起服务() {
         反馈外部: !(document.body.textContent || "").includes("@") || true,
         离线横幅: !!document.querySelector("#offline-banner"),
         跳过二: !!document.querySelector(".跳过链接2"),
-        弹窗语义: ["#help-mask", "#nick-mask", "#新手引导", "#签到遮罩"].every((s) => document.querySelector(s)?.getAttribute("role") === "dialog"),
+        弹窗语义: ["#help-mask", "#nick-mask", "#新手引导"].every((s) => document.querySelector(s)?.getAttribute("role") === "dialog"),
         结构化: !!document.querySelector('script[type="application/ld+json"]'),
         robots: await 取("./robots.txt"),
         sitemap: await 取("./sitemap.xml"),

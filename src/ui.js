@@ -10,7 +10,7 @@ import { 吐槽标注 } from "./pins.js";
 import { 发布, 订阅 } from "./events.js";
 import { 气氛系统 } from "./hype.js";
 import { 埋点 } from "./埋点.js";
-import { 签到, 治理 } from "./运营.js";
+import { 治理 } from "./运营.js";
 import { 错误收集, 当前未成年, 切换未成年, 当前主题, 切换主题, 当前省电, 切换省电, 当前语言, 切换语言, 反馈保存, 监视离线 } from "./治理.js";
 import { 文案, 取文案 } from "./i18n/zh-CN.js";
 
@@ -148,7 +148,6 @@ export class 界面 {
     this.同步按钮初始态();
     this.同步帮助文案();
     this.绑定新手引导();
-    this.绑定签到();
     this.绑定存档区();
     this.建治理栏();
     this.绑定未成年提醒();
@@ -600,7 +599,18 @@ export class 界面 {
         const 开启 = 声音.切换();
         if (开启) 声音.解锁();
         const 文案 = 开启 ? 配置.按钮文案.声音开 : 配置.按钮文案.声音关;
-        按钮.textContent = `${文案.图标}${文案.文字}`;
+        const 图 = 按钮.querySelector("span");
+        if (图) 图.textContent = 文案.图标;
+        const 名 = 按钮.querySelector("em");
+        if (名) 名.textContent = 文案.文字;
+        if (!图 || !名) {
+          按钮.replaceChildren();
+          const 新图 = document.createElement("span");
+          新图.textContent = 文案.图标;
+          const 新名 = document.createElement("em");
+          新名.textContent = 文案.文字;
+          按钮.append(新图, 新名);
+        }
         同步开关语义("sound", 开启);
         发布("提示", { 文本: 开启 ? 配置.文案.声音开 : 配置.文案.声音关 });
         break;
@@ -732,8 +742,8 @@ export class 界面 {
 
   设置旋转(开启) {
     配置.模型.自动旋转 = 开启;
-    if (开启) this.舞台.暂停自动旋转(0);
-    else this.舞台.旋转锁定 = 9999;
+    if (开启) this.舞台.恢复自动旋转();
+    else this.舞台.挂起自动旋转();
     return 开启;
   }
 
@@ -830,8 +840,6 @@ export class 界面 {
     if (this.元素.动作面板 && !this.元素.动作面板.classList.contains("hidden")) return true;
     const 新手 = 取("#新手引导");
     if (新手 && !新手.classList.contains("hidden")) return true;
-    const 签到罩 = 取("#签到遮罩");
-    if (签到罩 && !签到罩.classList.contains("hidden")) return true;
     return false;
   }
 
@@ -855,12 +863,6 @@ export class 界面 {
     const 新手 = 取("#新手引导");
     if (新手 && !新手.classList.contains("hidden")) {
       新手.classList.add("hidden");
-      this.回焦点();
-      return true;
-    }
-    const 签到罩 = 取("#签到遮罩");
-    if (签到罩 && !签到罩.classList.contains("hidden")) {
-      签到罩.classList.add("hidden");
       this.回焦点();
       return true;
     }
@@ -1124,11 +1126,6 @@ export class 界面 {
       const 关 = 取("#help-close");
       if (关) 关.textContent = this.文("开整");
       try {
-        const 签 = 取("#签到确认");
-        if (签 && !签.disabled) 签.textContent = this.文("签到钮");
-      } catch {
-      }
-      try {
         const 新手题 = 取("#新手引导标题");
         if (新手题 && !取("#新手引导")?.classList.contains("hidden")) 新手题.textContent = this.文("新手标题");
         const 帮助题 = 取("#help-title");
@@ -1179,11 +1176,7 @@ export class 界面 {
     const 表 = 埋点.读();
     const 明细 = 配置.埋点.事件.map((k) => `${k}${表[k] || 0}`).join("·");
     标题.textContent = `${配置.埋点.战绩页标题}：${明细}`;
-    const 签 = document.createElement("p");
-    签.className = "help-tip";
-    const 签态 = 签到.状态();
-    签.textContent = `${配置.签到.标题}：已连访${签态.连访天数}${配置.签到.连访单位}${签态.今日已签 ? "（今日已签）" : ""}`;
-    区.append(标题, 签);
+    区.append(标题);
   }
 
   刷新存档行() {
@@ -1279,15 +1272,6 @@ export class 界面 {
             }
             return;
           }
-          const 签到罩 = document.querySelector("#签到遮罩");
-          if (签到罩 && !签到罩.classList.contains("hidden")) {
-            try {
-              取("#签到关闭")?.addEventListener("click", () => setTimeout(开, 800), { once: true });
-              取("#签到确认")?.addEventListener("click", () => setTimeout(开, 800), { once: true });
-            } catch {
-            }
-            return;
-          }
           画();
           罩.dataset.已弹 = "1";
           罩.classList.remove("hidden");
@@ -1296,26 +1280,6 @@ export class 界面 {
       };
       setTimeout(开, 配置.新手引导.延迟毫秒 ?? 14000);
     }
-  }
-
-  绑定签到() {
-    const 罩 = 取("#签到遮罩");
-    if (!罩) return;
-    const 画 = () => {
-      const 态 = 签到.状态();
-      const 文 = 取("#签到状态");
-      if (文) 文.textContent = 态.今日已签 ? 配置.签到.今日已签 : `已连访${态.连访天数}${配置.签到.连访单位}，今日未签`;
-      const 钮 = 取("#签到确认");
-      if (钮) 钮.disabled = 态.今日已签;
-    };
-    取("#签到确认")?.addEventListener("click", () => {
-      const 果 = 签到.签();
-      this.提示(配置.签到.签到成功.replace("{天数}", String(果.连访天数)));
-      this.刷新埋点区();
-      画();
-    });
-    取("#签到关闭")?.addEventListener("click", () => 罩.classList.add("hidden"));
-    画();
   }
 
   绑定存档区() {
@@ -1747,7 +1711,7 @@ export class 界面 {
   绑定快捷表情() {
     const 栏 = this.元素.表情栏;
     if (!栏) return;
-    // 根因：快捷表情栏以前是输入行里的 inline 元素，6 个表情 + 签到 + 发送挤在一行，
+    // 根因：快捷表情栏以前是输入行里的 inline 元素，6 个表情挤在一行，
     // 窄屏/横屏下把发送按钮挤出输入栏。改为悬浮条后只留输入三件套，表情独立成行。
     栏.replaceChildren();
     for (const 表情 of 配置.表情.快捷表) {
@@ -1768,15 +1732,6 @@ export class 界面 {
       });
       栏.appendChild(钮);
     }
-    const 签钮 = document.createElement("button");
-    签钮.className = "emoji-btn";
-    签钮.type = "button";
-    签钮.textContent = "📅";
-    签钮.title = 配置.签到.标题;
-    签钮.addEventListener("click", () => {
-      取("#签到遮罩")?.classList.remove("hidden");
-    });
-    栏.appendChild(签钮);
   }
 
   初始化气氛系统() {

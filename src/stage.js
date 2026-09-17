@@ -164,6 +164,7 @@ export class 舞台 {
 
     // 自动旋转临时暂停（拖拽道具、用户操作时）
     this.旋转锁定 = 0;
+    this.旋转挂起 = false;
 
     // 用户一上手就让机位缓动让位，避免"抢镜头"
     this.控制器.addEventListener("start", () => {
@@ -412,6 +413,16 @@ export class 舞台 {
     this.旋转锁定 = Math.max(this.旋转锁定, 秒);
   }
 
+  挂起自动旋转() {
+    this.旋转挂起 = true;
+    this.旋转锁定 = 0;
+  }
+
+  恢复自动旋转() {
+    this.旋转挂起 = false;
+    this.旋转锁定 = 0;
+  }
+
   震一下(强度) {
     if (this.渲染器坏了) return;
     try {
@@ -483,8 +494,8 @@ export class 舞台 {
     const 时间 = this.计时.getElapsed();
 
     // 自动旋转：拖拽 / 丢道具时短暂让位
-    if (this.旋转锁定 > 0) this.旋转锁定 = Math.max(0, this.旋转锁定 - 步长);
-    const 想要旋转 = 配置.模型.自动旋转 && this.旋转锁定 === 0 && !this.拖拽中;
+    if (this.旋转锁定 > 0 && !this.旋转挂起) this.旋转锁定 = Math.max(0, this.旋转锁定 - 步长);
+    const 想要旋转 = 配置.模型.自动旋转 && this.旋转锁定 === 0 && !this.旋转挂起 && !this.拖拽中;
     this.控制器.autoRotate = 想要旋转;
 
     this.更新机位(步长);

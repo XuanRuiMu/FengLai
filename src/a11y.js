@@ -35,8 +35,6 @@ export function 标注舞台语义() {
     }
     const 新手 = document.querySelector("#新手引导");
     if (新手) 新手.setAttribute("aria-label", 配置.新手引导.标题);
-    const 签到罩 = document.querySelector("#签到遮罩");
-    if (签到罩) 签到罩.setAttribute("aria-label", 配置.签到.标题);
   } catch {
   }
 }

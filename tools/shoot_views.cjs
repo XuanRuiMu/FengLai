@@ -59,7 +59,6 @@ const 等 = (毫秒) => new Promise((r) => setTimeout(r, 毫秒));
   await 等(800);
   await 页.evaluate(() => {
     document.querySelector("#新手引导")?.classList.add("hidden");
-    document.querySelector("#签到遮罩")?.classList.add("hidden");
     const 罩 = document.querySelector("#新手引导");
     if (罩) 罩.dataset.引导停 = "1";
   }).catch(() => {});
