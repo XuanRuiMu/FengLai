@@ -17,7 +17,7 @@
 
 🚀 **[立即开整 → https://xuanruimu.github.io/FengLai/](https://xuanruimu.github.io/FengLai/)**
 
-![蜂来直播间](public/icons/截图-宽.png)
+![蜂来直播间](public/icons/%E6%88%AA%E5%9B%BE-%E5%AE%BD.png)
 
 ---
 
