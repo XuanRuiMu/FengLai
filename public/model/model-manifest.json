@@ -1,0 +1,14 @@
+{
+  "主": "model/model.glb",
+  "低": "model/model-lite.glb",
+  "哈希": {
+    "model/model.glb": "be76ca2a02232f87",
+    "model/model-parts.glb": "4127df10fbba88e0",
+    "model/model-lite.glb": "e0bae3007e9edc1c"
+  },
+  "体积": {
+    "model/model.glb": 9895736,
+    "model/model-parts.glb": 4790032,
+    "model/model-lite.glb": 4653676
+  }
+}

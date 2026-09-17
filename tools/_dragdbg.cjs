@@ -1,0 +1,32 @@
+const path=require("path"),fs=require("fs"),http=require("http");
+const {chromium}=require("playwright");
+const 端口=4191,根目录=path.join(__dirname,"..","dist");
+const MIME={".html":"text/html; charset=utf-8",".js":"text/javascript; charset=utf-8",".css":"text/css; charset=utf-8",".glb":"model/gltf-binary",".json":"application/json; charset=utf-8",".webmanifest":"application/manifest+json",".png":"image/png",".webp":"image/webp",".svg":"image/svg+xml"};
+const 起服务=()=>new Promise(完成=>{const 服务=http.createServer((请求,响应)=>{let p=decodeURIComponent(请求.url.split("?")[0]);if(p==="/")p="/index.html";const 文件=path.join(根目录,path.normalize(p).replace(/^(\.\.[/\\])+/,""));if(!文件.startsWith(根目录)||!fs.existsSync(文件)||fs.statSync(文件).isDirectory()){响应.writeHead(404).end("404");return;}响应.writeHead(200,{"Content-Type":MIME[path.extname(文件).toLowerCase()]||"application/octet-stream","Content-Length":fs.statSync(文件).size});fs.createReadStream(文件).pipe(响应);});服务.listen(端口,()=>完成(服务));});
+const 等=ms=>new Promise(r=>setTimeout(r,ms));
+const 取点=页=>页.evaluate(()=>{const el=document.querySelector("#controls");const r=el.getBoundingClientRect();for(let y=r.top+8;y<r.bottom-8;y+=4)for(let x=r.left+8;x<r.right-8;x+=4){const t=document.elementFromPoint(x,y);if(!t||!el.contains(t))continue;if(t.closest("button,input,textarea,select,a,.ctrl,.prop,.prop-tab,.emoji-btn,.act-chip"))continue;return{x:Math.round(x),y:Math.round(y)};}return null;});
+(async()=>{
+const 服务=await 起服务();
+const 浏览器=await chromium.launch({args:["--use-gl=swiftshader","--enable-unsafe-swiftshader"]});
+const 上下文=await 浏览器.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+const 页=await 上下文.newPage();
+await 页.addInitScript(()=>{window.__c={down:0,move:0,up:0};const h=(t,n)=>e=>{if(e.target.id==="controls"||e.target.closest("#controls"))window.__c[n]++;};window.addEventListener("pointerdown",h("d","down"),true);window.addEventListener("pointermove",h("m","move"),true);window.addEventListener("pointerup",h("u","up"),true);});
+await 页.goto(`http://127.0.0.1:${端口}/?调试=1`,{waitUntil:"domcontentloaded"});
+await 页.evaluate(()=>localStorage.clear());
+await 页.reload({waitUntil:"domcontentloaded"});
+await 页.waitForSelector("#controls .ctrl",{timeout:30000});
+await 页.evaluate(()=>{const b=document.querySelector("#nick-skip");if(b)b.click();});
+await 页.waitForTimeout(400);
+const 客户端=await 上下文.newCDPSession(页);
+const 点=await 取点(页);
+console.log("抓取点",点,"elementAt",await 页.evaluate((p)=>{const t=document.elementFromPoint(p.x,p.y);return t?t.tagName+"."+(t.className&&t.className.baseVal!==undefined?t.className.baseVal:t.className):null;},点));
+await 客户端.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x:点.x,y:点.y,radiusX:1,radiusY:1,force:1}]});
+console.log("down后计数",await 页.evaluate(()=>window.__c));
+for(let i=1;i<=6;i++){await 客户端.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:点.x-10*i,y:点.y-10*i,radiusX:1,radiusY:1,force:1}]});}
+console.log("move后计数",await 页.evaluate(()=>window.__c));
+await 客户端.send("Input.dispatchTouchEvent",{type:"touchEnd",touchPoints:[]});
+await 页.waitForTimeout(400);
+console.log("up后计数",await 页.evaluate(()=>window.__c));
+console.log("controls transform",await 页.evaluate(()=>document.querySelector("#controls").style.getPropertyValue("--拖X")+","+document.querySelector("#controls").style.getPropertyValue("--拖Y")));
+await 浏览器.close();服务.close();
+})().catch(e=>{console.error(e);process.exit(1);});

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+产物分析.html
+tools/_shots/
+tools/_*.log
+tools/_tts_*.txt
+.env
+.DS_Store
+Thumbs.db
+模型/武哲锋.glb
+模型/武哲锋正面.png
+模型/武哲锋背面.png

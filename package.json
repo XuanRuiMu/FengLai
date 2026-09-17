@@ -1,0 +1,41 @@
+{
+  "name": "feng-lai-stage",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "2026年动画电影《蜂来》宣传直播间",
+  "scripts": {
+    "predev": "node tools/sync-model.cjs",
+    "dev": "vite --host",
+    "prebuild": "node tools/sync-model.cjs",
+    "build": "vite build && node tools/inject_sw.cjs && node tools/check_budget.cjs",
+    "预算": "node tools/check_budget.cjs",
+    "产物分析": "产物分析=1 vite build && node tools/inject_sw.cjs",
+    "图标": "node tools/make_icons.cjs",
+    "preview": "vite preview --host",
+    "模型:体检": "node tools/inspect_glb.cjs 模型/武哲锋.glb",
+    "模型:优化": "node tools/optimize_glb.cjs 模型/武哲锋.glb 模型/优化版.glb",
+    "模型:轻量": "node tools/make_lite.cjs",
+    "模型:优化主": "node tools/optimize_main.cjs",
+    "模型:同步": "node tools/sync-model.cjs",
+    "语音:烘焙": "node tools/bake_voice.cjs",
+    "验证": "node tools/verify.cjs",
+    "audit:check": "npm audit --audit-level=high"
+  },
+  "dependencies": {
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@gltf-transform/cli": "^4.5.0",
+    "@gltf-transform/core": "^4.5.0",
+    "@gltf-transform/extensions": "^4.5.0",
+    "@gltf-transform/functions": "^4.5.0",
+    "meshoptimizer": "^1.2.0",
+    "playwright": "^1.63.0",
+    "rollup-plugin-visualizer": "^7.1.1",
+    "sharp": "^0.35.4",
+    "vite": "^8.3.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vitest": "^5.0.1"
+  }
+}
