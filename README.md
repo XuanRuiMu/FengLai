@@ -1,0 +1,168 @@
+# 蜂来 · FengLai
+
+> 2026 年动画电影《蜂来》宣传直播间 —— 全方面 3D 展示主播，双击点赞、拖拽道具整蛊、弹幕刷屏的无厘头互动舞台。
+
+[![Stars](https://img.shields.io/github/stars/XuanRuiMu/FengLai?style=flat&logo=github)](https://github.com/XuanRuiMu/FengLai/stargazers)
+[![Forks](https://img.shields.io/github/forks/XuanRuiMu/FengLai?style=flat&logo=github)](https://github.com/XuanRuiMu/FengLai/forks)
+[![License](https://img.shields.io/github/license/XuanRuiMu/FengLai)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/XuanRuiMu/FengLai)](https://github.com/XuanRuiMu/FengLai/commits/main)
+[![Issues](https://img.shields.io/github/issues/XuanRuiMu/FengLai)](https://github.com/XuanRuiMu/FengLai/issues)
+[![Repo Size](https://img.shields.io/github/repo-size/XuanRuiMu/FengLai)](https://github.com/XuanRuiMu/FengLai)
+[![Deploy](https://img.shields.io/github/deployments/XuanRuiMu/FengLai/Production?label=GitHub%20Pages)](https://xuanruimu.github.io/FengLai/)
+[![Powered by](https://img.shields.io/badge/powered%20by-Three.js-black)](https://threejs.org/)
+
+> 🌐 简体中文 ｜ [English](README_EN.md)
+
+---
+
+## 在线体验
+
+🚀 **[立即开整 → https://xuanruimu.github.io/FengLai/](https://xuanruimu.github.io/FengLai/)**
+
+![蜂来直播间](public/icons/截图-宽.png)
+
+---
+
+## 这是什么？
+
+《蜂来》是一部 2026 年的动画电影，我们的主角是一只爱折腾的蜜蜂主播。这个项目是它的 **宣传直播间**：一个跑在浏览器里的 3D 互动整蛊舞台——主播就站在你面前，双击点赞、拖道具砸他、发弹幕刷屏、把他惹毛看"暴怒糊屏"。
+
+所有东西都是**气氛演出**：人气值是假的、在线人数是换算的、送礼不花钱、模型本体不会受伤（大概）。
+
+- **纯前端**，无后端、无数据库、无需登录
+- 所有昵称 / 战绩 / 成就 / 弹幕偏好只存在**你自己浏览器的 localStorage**
+- 支持 **PWA 离线**，装到手机桌面当应用用
+- 开发者一行命令本地跑起
+
+---
+
+## 核心玩法
+
+| 玩法 | 说明 |
+| --- | --- |
+| 🐝 3D 主播 | 左键 360° 旋转、滚轮缩放、右键平移；可切换灯光 / 机位 / 自动旋转 |
+| ❤️ 双击点赞 | 双击模型任意位置，点赞图标飘起来，连续双击触发连击 |
+| 🎁 整蛊道具 | 从道具栏按住拖到模型身上：玫瑰是「献上」，西红柿鸡蛋是「砸过去」 |
+| 😡 暴怒糊屏 | 把愤怒值刷满，主播当场发飙，然后糊你一脸 |
+| 💬 弹幕刷屏 | 发「蜂来」「下雨」「蹦迪」「反转」这类口令有彩蛋 |
+| ☄️ 道具轰炸 | 天降正义；🧽 一键清洗所有污渍 |
+| 🍅 番茄雨 | 30 秒内扔够 10 个西红柿，全场天降西红柿 |
+| 🕺 蹦迪模式 | 灯光 + 音乐 + 彩色频闪，主播跟着摇 |
+| 🗣️ 台词语音 | 模型台词配音，出场有声音 |
+| 📜 战报海报 | 一键生成你的本场作战战绩海报 |
+| 🎭 动作栏 | 让主播走、跑、跳（切换到未上色分割模型）|
+| 🧩 多标签互通 | 同一个浏览器开两个标签，弹幕和点赞实时互通 |
+| 🏅 成就系统 | 解锁各种整蛊成就，累积勋章墙 |
+| 🎁 幸运观众 | 定时抽取发言 / 点赞观众，自动入围（气氛演出）|
+
+---
+
+## 技术栈
+
+| 层 | 技术 |
+| --- | --- |
+| 构建 | [Vite](https://vite.dev/)（ES2020 目标、gzip 压缩、three.js 单独 chunk）|
+| 3D 渲染 | [Three.js](https://threejs.org/) + 自研 GLB 模型管线（分割模型 / lite 低配模型）|
+| 语言 | 原生 JavaScript（零框架）|
+| PWA | 自定义 Service Worker（`tools/inject_sw.cjs` 注入）、manifest、离线缓存 |
+| 部署 | GitHub Actions → GitHub Pages（`.github/workflows/deploy-pages.yml`）|
+| 测试 | Vitest + Playwright（`tools/verify.cjs`）|
+
+### 值得一提的工程细节
+
+- **画质自适应**：按帧率自动切换画质等级，动态调整像素比 / 粒子数，低画质和省电模式自动关闭模型自动旋转——低端机也能流畅整蛊（见 [docs/低端机实测.md](docs/低端机实测.md)）。
+- **全自动化模型管线**：`tools/` 下 10+ 个脚本做 GLB 压缩优化、轻量模型生成、图标批量制作、语音烘焙、SW 注入、预算检查，`npm run build` 一步到位。
+- **严格内容预算**：`npm run 预算` 检查产物体积上限，防止页面膨胀。
+- **多语言内容配置**：成就 / 弹幕池 / 奖品 / 台词 / 公告全部外置到 `public/content/*.json`，不用改代码就能运营。
+
+---
+
+## 快速开始
+
+```bash
+# 克隆
+git clone https://github.com/XuanRuiMu/FengLai.git
+cd FengLai
+
+# 安装依赖
+npm install
+
+# 本地开发（自动同步模型 → 启动 Vite，默认 http://localhost:5173）
+npm run dev
+
+# 生产构建（构建 → 注入 SW → 预算检查）
+npm run build
+
+# 本地预览产物
+npm run preview
+```
+
+> 注意：3D 模型体积较大（含原始 `.glb`），仓库中仅保留生产用优化模型到 `public/model/`；开发入口 `index.html` 直接位于根目录。
+
+---
+
+## 项目结构
+
+```text
+FengLai/
+├── index.html              # 应用入口（单页，弹幕层/道具栏/控制栏等全部 DOM）
+├── vite.config.js          # Vite 配置（three.js 分包、gzip、构建插件链）
+├── package.json            # 脚本与依赖（唯一运行时依赖 three.js）
+├── src/                    # 全部源码（原生 JS 模块化）
+│   ├── main.js             # 应用启动：组装舞台/模型/粒子/弹幕/成就/UI 等模块
+│   ├── stage.js            # 3D 舞台渲染
+│   ├── model.js            # 模型加载与切换
+│   ├── props.js            # 道具系统（拖拽/砸在模型上）
+│   ├── danmu.js            # 弹幕 / 口令彩蛋
+│   ├── likes.js            # 双击点赞与连击
+│   ├── achv.js             # 成就系统
+│   ├── pranks.js           # 暴怒 / 糊屏 / 番茄雨 / 蹦迪等整蛊效果
+│   ├── hall.js             # 直播厅（在线数 / 人气 / 礼物榜）
+│   ├── pins.js / decals.js # 吐槽标注 / 污渍贴花
+│   ├── poster.js           # 战报海报
+│   ├── speech.js / audio.js# 台词语音
+│   └── ...                 # 状态、UI、埋点、PWA、无障碍等
+├── public/                 # 静态资源
+│   ├── content/            # 成就/弹幕池/奖品/台词/公告（JSON）
+│   ├── model/              # 生产用 GLB 模型（原始版/分割版/lite 版）
+│   ├── audio/vo/           # 烘焙好的台词语音
+│   └── icons/              # PWA 图标与横截图
+├── tools/                  # 构建期脚本（模型/图标/语音/预算/验证）
+├── docs/                   # 实测文档（低端机、字体与表情）
+├── CHANGELOG.md            # 版本历史
+└── LICENSE
+```
+
+---
+
+## 截图一览
+
+![道具整蛊](public/icons/截图-窄.png)
+
+> 更多现场图见仓库本地 `tools/_shots/`（开发期截屏，未入库）。
+
+---
+
+## 测试与验证
+
+```bash
+npm run 验证        # 运行工具链自检（verify.cjs）
+npm run 预算        # 产物体积预算检查
+npm run audit:check # 依赖安全审计
+```
+
+---
+
+## 相关链接
+
+- 🐝 [在线直播间](https://xuanruimu.github.io/FengLai/)
+- 📖 [更新日志](CHANGELOG.md) ｜ [隐私说明](public/privacy.html) ｜ [服务条款](public/terms.html)
+- 🎬 动画电影《蜂来》—— 敬请期待
+
+---
+
+## 许可证
+
+[查看 LICENSE](LICENSE)
+
+**Made with ❤️ ！双击点赞，开整！**
