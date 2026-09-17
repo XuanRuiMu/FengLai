@@ -31,8 +31,16 @@
 
 /* ── 横屏分支：矮宽屏把两侧面板收窄、道具栏压低 ── */
 @media (orientation: landscape) and (max-height: 500px) {
-  #topbar { height: 44px; }
-  #stat-panel { width: 150px; top: 60px; padding: 8px; }
+  #topbar { height: 44px; padding: 0 10px; gap: 8px; }
+  .brand-bee { font-size: 20px; }
+  .brand-text strong { font-size: 13px; white-space: nowrap; }
+  .topbar-mid { display: none; }
+  #tab-count-wrap { display: none; }
+  #popularity-wrap { display: none; }
+  .follow-btn { display: none; }
+  .nick-btn { max-width: 76px; font-size: 11px; }
+  .title-badge { max-width: 76px; font-size: 11px; padding: 5px 10px; }
+  #stat-panel { width: 150px; top: 60px; padding: 8px; max-height: calc(100vh - 220px); }
   #controls { top: 60px; max-height: 62vh; }
   #dock { bottom: 8px; padding: 6px 10px 4px; }
   #danmu-input-bar { bottom: 176px; width: min(380px, calc(100vw - 220px)); }
@@ -41,6 +49,7 @@
   .brand-text small { display: none; }
   .marquee { display: none; }
   .entry-layer, .gift-layer { display: none; }
+  .help-card { width: min(520px, calc(100vw - 120px)); max-height: calc(100vh - 32px); }
 }
 
 * {
@@ -1670,12 +1679,12 @@ body {
   .brand-text { min-width: 0; }
   .brand-text strong { font-size: 13px; white-space: nowrap; }
   .brand-text small { display: none; }
-  .topbar-right { gap: 6px; margin-left: auto; }
+  .topbar-right { gap: 6px; margin-left: auto; min-width: 0; }
   #tab-count-wrap { display: none; }
   #popularity-wrap { display: none; }
   .follow-btn { display: none; }
-  .nick-btn { max-width: 76px; font-size: 11px; }
-  .title-badge { max-width: 76px; font-size: 11px; padding: 5px 10px; }
+  .nick-btn { max-width: 64px; font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
+  .title-badge { max-width: 64px; font-size: 11px; padding: 5px 10px; overflow: hidden; text-overflow: ellipsis; }
   .prop { width: 54px; height: 60px; }
   .prop-icon { font-size: 22px; }
   .dock-hint { font-size: 10px; }
