@@ -40,7 +40,7 @@
   .follow-btn { display: none; }
   .nick-btn { max-width: 76px; font-size: 11px; }
   .title-badge { max-width: 76px; font-size: 11px; padding: 5px 10px; }
-  #stat-panel { width: 150px; top: 60px; padding: 8px; max-height: calc(100vh - 220px); }
+  #stat-panel { width: 150px; top: 60px; padding: 8px; max-height: calc(100vh - 220px); display: none; }
   #controls { top: 60px; max-height: 62vh; }
   #dock { bottom: 8px; padding: 6px 10px 4px; }
   #danmu-input-bar { bottom: 176px; width: min(380px, calc(100vw - 220px)); }
