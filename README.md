@@ -8,10 +8,8 @@
 [![Last Commit](https://img.shields.io/github/last-commit/XuanRuiMu/FengLai)](https://github.com/XuanRuiMu/FengLai/commits/main)
 [![Issues](https://img.shields.io/github/issues/XuanRuiMu/FengLai)](https://github.com/XuanRuiMu/FengLai/issues)
 [![Repo Size](https://img.shields.io/github/repo-size/XuanRuiMu/FengLai)](https://github.com/XuanRuiMu/FengLai)
-[![Deploy](https://img.shields.io/github/deployments/XuanRuiMu/FengLai/Production?label=GitHub%20Pages)](https://xuanruimu.github.io/FengLai/)
+[![Live](https://img.shields.io/badge/live-GitHub%20Pages-brightgreen)](https://xuanruimu.github.io/FengLai/)
 [![Powered by](https://img.shields.io/badge/powered%20by-Three.js-black)](https://threejs.org/)
-
-> 🌐 简体中文 ｜ [English](README_EN.md)
 
 ---
 
@@ -132,14 +130,6 @@ FengLai/
 ├── CHANGELOG.md            # 版本历史
 └── LICENSE
 ```
-
----
-
-## 截图一览
-
-![道具整蛊](public/icons/截图-窄.png)
-
-> 更多现场图见仓库本地 `tools/_shots/`（开发期截屏，未入库）。
 
 ---
 
