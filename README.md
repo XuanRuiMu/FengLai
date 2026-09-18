@@ -11,6 +11,8 @@
 [![Live](https://img.shields.io/badge/live-GitHub%20Pages-brightgreen)](https://xuanruimu.github.io/FengLai/)
 [![Powered by](https://img.shields.io/badge/powered%20by-Three.js-black)](https://threejs.org/)
 
+> 🌐 简体中文 ｜ [English](README_EN.md)
+
 ---
 
 ## 在线体验
